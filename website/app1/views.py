@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .forms import VideoForm
@@ -27,10 +27,8 @@ def video_list(request):
 
 
 def video_detail(request, pk):
-	try:
-		video = Video.objects.get(pk=pk)
-	except Video.DoesNotExist:
-		video = None
+	"""Display details for a single video or 404 if not found."""
+	video = get_object_or_404(Video, pk=pk)
 	return render(request, 'video_detail.html', {'video': video})
 
 
@@ -46,11 +44,9 @@ def video_create(request):
 
 
 def video_update(request, pk):
-	try:
-		video = Video.objects.get(pk=pk)
-	except Video.DoesNotExist:
-		return redirect('video_list')
-	
+	"""Update an existing video; redirects to list if not found."""
+	video = get_object_or_404(Video, pk=pk)
+
 	if request.method == 'POST':
 		form = VideoForm(request.POST, instance=video)
 		if form.is_valid():
@@ -62,11 +58,9 @@ def video_update(request, pk):
 
 
 def video_delete(request, pk):
-	try:
-		video = Video.objects.get(pk=pk)
-	except Video.DoesNotExist:
-		return redirect('video_list')
-	
+	"""Delete an existing video after confirmation; redirects to list if not found."""
+	video = get_object_or_404(Video, pk=pk)
+
 	if request.method == 'POST':
 		video.delete()
 		return redirect('video_list')
