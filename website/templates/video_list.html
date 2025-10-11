@@ -74,15 +74,19 @@
   </style>
 </head>
 <body>
-  <h2>Video Inventory</h2>
+  <header>
+    <h2>Video Inventory</h2>
+    <p style="color:#555;">Manage your movie collection — search, add, edit, or remove entries.</p>
+  </header>
   <div class="nav">
-    <a href="/">Home</a>
-    <a href="/videos/add/">Add New Video</a>
+    <a href="/" aria-label="Home">Home</a>
+    <a href="/videos/add/" aria-label="Add new video">Add New Video</a>
   </div>
 
-  <div class="search-box">
+  <div class="search-box" role="search" aria-label="Video search">
     <form method="get">
-      <input type="text" name="search" placeholder="Search by title, actor, director, or genre..." value="{{ search_query }}">
+      <label for="search-input" class="sr-only">Search videos</label>
+      <input id="search-input" type="text" name="search" placeholder="Search by title, actor, director, or genre..." value="{{ search_query }}">
       <button type="submit">Search</button>
       {% if search_query %}
         <a href="/videos/" style="margin-left: 10px;">Clear</a>
