@@ -20,16 +20,20 @@ REM === Build Django image inside Minikube Docker ===
 docker build -t my-django-app:latest .
 '''
 }
-}
-stage('Deploy to Minikube') {
-steps {
-bat '''
-REM === Apply the updated deployment manifest ===
-kubectl apply -f deployment.yaml
-REM === Ensure the rollout completes ===
-kubectl rollout status deployment/django-deployment
-'''
-}
+}stage('Deploy to Minikube') {
+  steps {
+    bat '''
+    REM === Make sure Minikube is running ===
+    minikube status || minikube start --driver=docker
+
+    REM === Apply manifests using Minikube's kubectl ===
+    minikube kubectl -- apply -f deployment.yaml
+    minikube kubectl -- apply -f service.yaml
+
+    REM === Wait for the rollout to finish ===
+    minikube kubectl -- rollout status deployment/django-deployment
+    '''
+  }
 }
 }
 }
