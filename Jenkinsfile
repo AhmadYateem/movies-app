@@ -16,11 +16,14 @@ pipeline {
     stage('Build in Minikube Docker') {
       steps {
         bat '''
-        REM === Switch Docker to Minikube Docker ===
+        REM === Ensure Minikube is running (ADDED) ===
+        minikube status || minikube start --driver=docker --wait=all
+
+        REM === Switch Docker to Minikube Docker (UNCHANGED, but now works) ===
         call minikube docker-env --shell=cmd > docker_env.bat
         call docker_env.bat
 
-        REM === Build Django image inside Minikube Docker ===
+        REM === Build Django image inside Minikube Docker (UNCHANGED) ===
         docker build -t my-django-app:latest .
         '''
       }
@@ -29,19 +32,13 @@ pipeline {
     stage('Deploy to Minikube') {
       steps {
         bat '''
-        REM === Make sure Minikube is running ===
-        minikube status || minikube start --driver=docker
-
-        REM === Apply manifests using Minikube's kubectl ===
+        REM === Apply using Minikube's kubectl (CHANGED) ===
         minikube kubectl -- apply -f deployment.yaml
-        minikube kubectl -- apply -f service.yaml
 
-        REM === Wait for the rollout to finish ===
-        minikube kubectl -- rollout status deployment/django-deployment
+        REM === Wait for rollout (CHANGED) ===
+        minikube kubectl -- rollout status deployment/django-deployment --timeout=180s
         '''
       }
     }
-
   }
-
 }
