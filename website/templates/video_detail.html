@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% if video %}{{ video.MovieTitle }}{% else %}Video not found{% endif %}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border: 1px solid #ddd;
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 2px solid #0066cc;
+      padding-bottom: 10px;
+    }
+    .detail-row {
+      margin: 15px 0;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .label {
+      font-weight: bold;
+      color: #555;
+      display: inline-block;
+      width: 140px;
+    }
+    .actions {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+    }
+    .actions a {
+      text-decoration: none;
+      color: #0066cc;
+      margin-right: 15px;
+    }
+    a.back {
+      color: #0066cc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <p><a href="/videos/" class="back">← Back to list</a></p>
+  
+  {% if video %}
+    <div class="container">
+      <h2>{{ video.MovieTitle }}</h2>
+      
+      <div class="detail-row">
+        <span class="label">Movie ID:</span>
+        <span>{{ video.MovieID }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Genre:</span>
+        <span>{{ video.MovieGenre|default:"N/A" }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Release Year:</span>
+        <span>{{ video.ReleaseYear|default:"N/A" }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Director:</span>
+        <span>{{ video.DirectorName|default:"N/A" }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Actor 1:</span>
+        <span>{{ video.Actor1Name|default:"N/A" }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Actor 2:</span>
+        <span>{{ video.Actor2Name|default:"N/A" }}</span>
+      </div>
+      
+      <div class="actions">
+        <a href="/videos/{{ video.MovieID }}/edit/">Edit</a>
+        <a href="/videos/{{ video.MovieID }}/delete/">Delete</a>
+      </div>
+    </div>
+  {% else %}
+    <p>Video not found.</p>
+  {% endif %}
+</body>
+</html>
