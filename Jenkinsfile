@@ -2,6 +2,7 @@ pipeline {
   agent any
 
   triggers {
+    // Poll GitHub every 2 minutes
     pollSCM('H/2 * * * *')
   }
 
@@ -10,6 +11,16 @@ pipeline {
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/AhmadYateem/movies-app.git'
+      }
+    }
+
+    stage('Ensure Minikube running') {
+      steps {
+        bat '''
+        REM === Check Minikube and start if needed (Docker Desktop must be running) ===
+        minikube version
+        minikube status || minikube start --driver=docker
+        '''
       }
     }
 
@@ -29,14 +40,29 @@ pipeline {
     stage('Deploy to Minikube') {
       steps {
         bat '''
-        REM === Apply the updated deployment manifest ===
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
-
-        REM === Ensure the rollout completes ===
-        kubectl rollout status deployment/django-deployment
+        REM === Apply manifests using Minikube's kubectl and wait for rollout ===
+        minikube kubectl -- apply -f deployment.yaml
+        minikube kubectl -- apply -f service.yaml
+        minikube kubectl -- rollout status deployment/django-deployment
         '''
       }
+    }
+
+    stage('Show Service URL') {
+      steps {
+        bat '''
+        REM === Print the service URL (open it in your browser) ===
+        minikube service django-service --url
+        '''
+      }
+    }
+  }
+
+  post {
+    always {
+      bat '''
+      if exist docker_env.bat del /f /q docker_env.bat
+      '''
     }
   }
 }

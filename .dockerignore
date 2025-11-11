@@ -1,4 +1,6 @@
 myenv/
+venv/
+.env
 .git/
 .gitignore
 __pycache__/
@@ -9,3 +11,9 @@ __pycache__/
 *.so
 *.log
 db.sqlite3
+*.sqlite3
+*.tmp
+*.swp
+staticfiles/
+node_modules/
+docker_env.bat
