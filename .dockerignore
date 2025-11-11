@@ -1,0 +1,11 @@
+myenv/
+.git/
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.log
+db.sqlite3
