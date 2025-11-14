@@ -16,13 +16,9 @@ pipeline {
     stage('Build in Minikube Docker') {
       steps {
         bat '''
-        REM === Get Minikube Docker host without TLS ===
-        for /f "tokens=2 delims==" %%i in ('minikube docker-env --shell=cmd ^| findstr DOCKER_HOST') do set DOCKER_HOST=%%i
-        
-        REM === Strip quotes and use without TLS ===
-        set DOCKER_HOST=%DOCKER_HOST:"=%
-        set DOCKER_TLS_VERIFY=
-        set DOCKER_CERT_PATH=
+        REM === Switch Docker to Minikube Docker ===
+        call minikube docker-env --shell=cmd > docker_env.bat
+        call docker_env.bat
 
         REM === Build Django image inside Minikube Docker ===
         docker build -t mydjangoapp:latest .
