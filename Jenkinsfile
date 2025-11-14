@@ -26,17 +26,20 @@ pipeline {
       }
     }
 
-    stage('Deploy to Minikube') {
-      steps {
-        bat '''
-        REM === Apply the updated deployment manifest ===
-        minikube kubectl -- apply -f deployment.yaml
-        minikube kubectl -- apply -f service.yaml
+   stage('Deploy to Minikube') {
+  steps {
+    bat '''
+    REM === Apply the updated deployment manifest ===
+    minikube kubectl -- apply -f deployment.yaml
+    minikube kubectl -- apply -f service.yaml
 
-        REM === Ensure the rollout completes ===
-        minikube kubectl -- rollout status deployment/django-deployment
-        '''
-      }
-    }
+    REM === Force a new rollout by bumping an annotation ===
+    minikube kubectl -- patch deployment django-deployment -p "{ \\"spec\\": { \\"template\\": { \\"metadata\\": { \\"annotations\\": { \\"buildNumber\\": \\"%BUILD_NUMBER%\\" } } } } }"
+
+    REM === Ensure the rollout completes ===
+    minikube kubectl -- rollout status deployment/django-deployment --timeout=180s
+    '''
   }
 }
+  }
+} 
