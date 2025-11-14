@@ -20,5 +20,4 @@ COPY . /app/
 
 EXPOSE 8000
 
-# Run migrations and start server
-CMD ["sh", "-c", "python website/manage.py migrate && python website/manage.py runserver 0.0.0.0:8000"]
+CMD ["python", "website/manage.py", "runserver", "0.0.0.0:8000"]
