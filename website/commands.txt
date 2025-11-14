@@ -1,0 +1,4 @@
+cd C:\Users\ahmad\OneDrive\Desktop\EECE430-minikube\movies-app
+git add .
+git commit -m "Test change for pipeline"
+git push origin main
