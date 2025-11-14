@@ -19,6 +19,9 @@ pipeline {
         REM === Switch Docker to Minikube Docker ===
         call minikube docker-env --shell=cmd > docker_env.bat
         call docker_env.bat
+        
+        REM === Disable TLS verification for local Minikube ===
+        SET DOCKER_TLS_VERIFY=
 
         REM === Build Django image inside Minikube Docker ===
         docker build -t mydjangoapp:latest .
