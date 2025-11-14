@@ -9,6 +9,8 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
+        // Clean workspace before checkout to avoid cached files
+        deleteDir()
         git branch: 'main', url: 'https://github.com/AhmadYateem/movies-app.git'
       }
     }
